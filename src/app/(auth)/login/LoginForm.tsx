@@ -1,44 +1,40 @@
 "use client";
-import { signUpSchema, SignUpValues } from "@/lib/validation";
-import React, { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
+
+import { loginSchema, LoginValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { login } from "./actions";
+import { useState, useTransition } from "react";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { signUp } from "./actions";
-import { PasswordInput } from "@/components/PasswordInput";
 import LoadingButton from "@/components/LoadingButton";
+import { PasswordInput } from "@/components/PasswordInput";
+import SignUpForm from "../signup/SignUpForm";
+import { Input } from "@/components/ui/input";
 
-interface SignUpFormProps {}
-
-const SignUpForm: React.FC<SignUpFormProps> = ({}) => {
+export const LoginForm = () => {
   const [error, setError] = useState<string>();
 
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<SignUpValues>({
-    resolver: zodResolver(signUpSchema),
+  const form = useForm<LoginValues>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
       username: "",
       password: "",
     },
   });
 
-  async function onSubmit(values: SignUpValues) {
+  async function onSubmit(values: LoginValues) {
     setError(undefined);
     startTransition(async () => {
-      const { error } = await signUp(values);
+      const { error } = await login(values);
       if (error) setError(error);
     });
   }
@@ -66,22 +62,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({}) => {
 
         <FormField
           control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="Email" type="email" {...field} />
-              </FormControl>
-              {/* <FormDescription>
-                This is your public display name.
-              </FormDescription> */}
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="password"
           render={({ field }) => (
             <FormItem>
@@ -97,7 +77,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({}) => {
           )}
         />
         <LoadingButton loading={isPending} type="submit" className="w-full">
-          Create account
+          Log in
         </LoadingButton>
       </form>
     </Form>
