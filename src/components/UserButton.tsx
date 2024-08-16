@@ -31,6 +31,7 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import { Button } from "./ui/button";
 import { setDefaultHighWaterMark } from "stream";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface UserButtonProps {
   className?: string;
@@ -40,6 +41,9 @@ const UserButton: React.FC<UserButtonProps> = ({ className }) => {
   const { user } = useSession();
 
   const { theme, setTheme } = useTheme();
+
+  const queryClient = useQueryClient();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -84,6 +88,7 @@ const UserButton: React.FC<UserButtonProps> = ({ className }) => {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
+            queryClient.clear();
             logout();
           }}
         >
