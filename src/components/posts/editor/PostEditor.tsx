@@ -9,6 +9,8 @@ import UserAvatar from "@/components/UserAvatar";
 import { useSession } from "@/app/(main)/SessionProvider";
 import { Button } from "@/components/ui/button";
 import "./styles.css";
+import useSubmitPostMutation from "./mutations";
+import LoadingButton from "@/components/LoadingButton";
 
 interface PostEditorProps {}
 
@@ -16,6 +18,7 @@ const PostEditor: React.FC<PostEditorProps> = ({}) => {
   // Call useSession hook to get user
   const { user } = useSession();
 
+  const mutation = useSubmitPostMutation();
   // Setup tiptap editor
   const editor = useEditor({
     //Disable immediatelyRender to prevent hydration issues
@@ -39,7 +42,11 @@ const PostEditor: React.FC<PostEditorProps> = ({}) => {
 
   // Call submitPost on submit
   async function onSubmit() {
-    await submitPost(input);
+    mutation.mutate(input, {
+      onSuccess: () => {
+        editor?.commands.clearContent();
+      },
+    });
     editor?.commands.clearContent();
   }
 
@@ -53,14 +60,15 @@ const PostEditor: React.FC<PostEditorProps> = ({}) => {
         />
       </div>
       <div className="flex justify-end">
-        <Button
+        <LoadingButton
           onClick={onSubmit}
+          loading={mutation.isPending}
           // Disable button if there is no content
           disabled={!input.trim()}
           className="min-w-20"
         >
           Post
-        </Button>
+        </LoadingButton>
       </div>
     </div>
   );
