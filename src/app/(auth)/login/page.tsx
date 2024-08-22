@@ -20,7 +20,7 @@ const Page = () => {
               href={"/signup"}
               className="block text-center hover:underline"
             >
-              Don&apos; have an account? Sign up
+              Don&apos;t have an account? Sign up
             </Link>
           </div>
         </div>
