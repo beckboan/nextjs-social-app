@@ -13,6 +13,7 @@ import { notFound } from "next/navigation";
 import React, { cache } from "react";
 import UserFeed from "./UserFeed";
 import UserPosts from "./UserFeed";
+import Linkify from "@/components/Linkify";
 
 interface pageProps {
   params: { username: string };
@@ -123,9 +124,11 @@ const UserProfile = async ({ user, loggedInUserId }: UserProfileProps) => {
       {user.bio && (
         <>
           <hr>
-            <div className="overflow-hidden whitespace-pre-line break-words">
-              {user.bio}
-            </div>
+            <Linkify>
+              <div className="overflow-hidden whitespace-pre-line break-words">
+                {user.bio}
+              </div>
+            </Linkify>
           </hr>
         </>
       )}
